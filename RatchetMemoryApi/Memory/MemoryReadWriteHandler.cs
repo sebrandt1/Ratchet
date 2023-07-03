@@ -19,10 +19,10 @@ namespace RatchetMemoryApi.Memory
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
         [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        public static extern bool ReadProcessMemory(int hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
         
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesWritten);
+        static extern bool WriteProcessMemory(int hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesWritten);
 
         private const string PROCESS_NAME = "pcsx2-qt";
         private const int PROCESS_ALL_ACCESS = 0x1F0FFF;
@@ -52,84 +52,84 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteByte(int offsetAddress, byte value)
         {
             var bytesWritten = 0;
-            var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            var bytes = new byte[1] { value };
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteByteArray(int offsetAddress, byte[] value)
         {
             var bytesWritten = 0;
             var bytes = value;
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteChar(int offsetAddress, char value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteDouble(int offsetAddress, double value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteFloat(int offsetAddress, float value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteShort(int offsetAddress, short value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteInt(int offsetAddress, int value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteLong(int offsetAddress, long value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteUShort(int offsetAddress, ushort value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteUInt(int offsetAddress, uint value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteULong(int offsetAddress, ulong value)
         {
             var bytesWritten = 0;
             var bytes = BitConverter.GetBytes(value);
-            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
+            WriteProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
         #endregion
 
@@ -138,7 +138,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(bool)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToBoolean(buffer, 0);
         }
@@ -147,7 +147,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(byte)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return buffer[0];
         }
@@ -156,7 +156,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[size];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return buffer;
         }
@@ -165,7 +165,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(char)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToChar(buffer, 0);
         }
@@ -174,7 +174,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(double)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToDouble(buffer, 0);
         }
@@ -183,7 +183,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(float)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToSingle(buffer, 0);
         }
@@ -192,7 +192,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(short)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToInt16(buffer, 0);
         }
@@ -201,7 +201,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(int)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToInt32(buffer, 0);
         }
@@ -210,7 +210,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(long)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToInt64(buffer, 0);
         }
@@ -219,7 +219,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(ushort)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToUInt16(buffer, 0);
         }
@@ -228,7 +228,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(uint)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToUInt32(buffer, 0);
         }
@@ -237,7 +237,7 @@ namespace RatchetMemoryApi.Memory
         {
             var bytesWritten = 0;
             var buffer = new byte[sizeof(ulong)];
-            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+            ReadProcessMemory((int)processHandle, (IntPtr)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
 
             return BitConverter.ToUInt64(buffer, 0);
         }
