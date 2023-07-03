@@ -48,7 +48,7 @@ namespace RatchetMemoryApi.Memory.Weapons
         {
             if (AmmoAddress != null)
             {
-                return MemoryReadWriteHandler.Instance.ReadByte((int)AmmoAddress);
+                return MemoryReadWriteHandler.Instance.ReadInt((int)AmmoAddress);
             }
             return -1;
         }

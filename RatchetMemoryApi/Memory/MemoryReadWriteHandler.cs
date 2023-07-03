@@ -11,7 +11,6 @@ namespace RatchetMemoryApi.Memory
     {
         private static MemoryReadWriteHandler instance;
         private Process process;
-        private VAMemory vaMem;
 
         private long BaseAddress => Pcsx2.BASE_ADDRESS;
 
@@ -21,24 +20,28 @@ namespace RatchetMemoryApi.Memory
 
         [DllImport("kernel32.dll")]
         public static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesWritten);
 
         private const string PROCESS_NAME = "pcsx2-qt";
+        private const int PROCESS_ALL_ACCESS = 0x1F0FFF;
+        private IntPtr processHandle = IntPtr.Zero;
 
         public static MemoryReadWriteHandler Instance
         {
             get
             {
-                if (instance == null || instance.process == null || instance.vaMem == null || instance.process.HasExited)
+                if (instance == null || instance.process == null || instance.process.HasExited)
                 {
                     instance = new MemoryReadWriteHandler();
                     instance.process = Process.GetProcessesByName(PROCESS_NAME).FirstOrDefault();
+                    instance.processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, instance.process.Id);
 
                     if(instance.process == null)
                     {
                         throw new InvalidOperationException($"Process with name {PROCESS_NAME} was not found.");
                     }    
-
-                    instance.vaMem = new VAMemory(instance.process.ProcessName);
                 }
                 return instance;
             }
@@ -47,124 +50,196 @@ namespace RatchetMemoryApi.Memory
         #region WRITE DATA
         public void WriteBool(int offsetAddress, bool value)
         {
-            vaMem.WriteBoolean((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteByte(int offsetAddress, byte value)
         {
-            vaMem.WriteByte((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteByteArray(int offsetAddress, byte[] value)
         {
-            vaMem.WriteByteArray((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = value;
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteChar(int offsetAddress, char value)
         {
-            vaMem.WriteChar((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteDouble(int offsetAddress, double value)
         {
-            vaMem.WriteDouble((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteFloat(int offsetAddress, float value)
         {
-            vaMem.WriteFloat((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteShort(int offsetAddress, short value)
         {
-            vaMem.WriteInt16((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteInt(int offsetAddress, int value)
         {
-            vaMem.WriteInt32((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteLong(int offsetAddress, long value)
         {
-            vaMem.WriteInt64((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteUShort(int offsetAddress, ushort value)
         {
-            vaMem.WriteUInt16((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteUInt(int offsetAddress, uint value)
         {
-            vaMem.WriteUInt32((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
 
         public void WriteULong(int offsetAddress, ulong value)
         {
-            vaMem.WriteUInt64((IntPtr)(BaseAddress + offsetAddress), value);
+            var bytesWritten = 0;
+            var bytes = BitConverter.GetBytes(value);
+            WriteProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), bytes, bytes.Length, ref bytesWritten);
         }
         #endregion
 
         #region READ DATA
         public bool ReadBool(int offsetAddress)
         {
-            return vaMem.ReadBoolean((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(bool)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToBoolean(buffer, 0);
         }
 
         public byte ReadByte(int offsetAddress)
         {
-            return vaMem.ReadByte((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(byte)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return buffer[0];
         }
 
         public byte[] ReadByteArray(int offsetAddress, uint size)
         {
-            return vaMem.ReadByteArray((IntPtr)(BaseAddress + offsetAddress), size);
+            var bytesWritten = 0;
+            var buffer = new byte[size];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return buffer;
         }
 
         public char ReadChar(int offsetAddress)
         {
-            return vaMem.ReadChar((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(char)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToChar(buffer, 0);
         }
 
         public double ReadDouble(int offsetAddress)
         {
-            return vaMem.ReadDouble((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(double)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToDouble(buffer, 0);
         }
 
         public float ReadFloat(int offsetAddress)
         {
-            return vaMem.ReadFloat((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(float)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToSingle(buffer, 0);
         }
 
         public short ReadShort(int offsetAddress)
         {
-           return vaMem.ReadShort((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(short)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToInt16(buffer, 0);
         }
 
         public int ReadInt(int offsetAddress)
         {
-            return vaMem.ReadInt32((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(int)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToInt32(buffer, 0);
         }
 
         public long ReadLong(int offsetAddress)
         {
-            return vaMem.ReadInt64((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(long)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToInt64(buffer, 0);
         }
 
         public ushort ReadUShort(int offsetAddress)
         {
-            return vaMem.ReadUInt16((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(ushort)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToUInt16(buffer, 0);
         }
 
         public uint ReadUInt(int offsetAddress)
         {
-            return vaMem.ReadUInt16((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(uint)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToUInt32(buffer, 0);
         }
 
         public ulong ReadULong(int offsetAddress)
         {
-            return vaMem.ReadUInt64((IntPtr)(BaseAddress + offsetAddress));
+            var bytesWritten = 0;
+            var buffer = new byte[sizeof(ulong)];
+            ReadProcessMemory((int)processHandle, (int)(BaseAddress + offsetAddress), buffer, buffer.Length, ref bytesWritten);
+
+            return BitConverter.ToUInt64(buffer, 0);
         }
         #endregion
     }
