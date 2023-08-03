@@ -44,6 +44,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Destructible.cs" />
+    <Compile Include="Events\EnabledValueUpdatedArgs.cs" />
+    <Compile Include="Events\WeaponUpdatedArgs.cs" />
     <Compile Include="Memory\Addresses\Gadgets.cs" />
     <Compile Include="Memory\Addresses\ItemToggles.cs" />
     <Compile Include="Memory\Addresses\Pcsx2.cs" />
@@ -51,6 +54,9 @@
     <Compile Include="Memory\Addresses\Resources.cs" />
     <Compile Include="Memory\Addresses\WeaponAmmo.cs" />
     <Compile Include="Memory\Addresses\WeaponSlots.cs" />
+    <Compile Include="Memory\Animator.cs" />
+    <Compile Include="Memory\Items\ItemBase.cs" />
+    <Compile Include="Memory\Items\ItemContainer.cs" />
     <Compile Include="Memory\MemoryReadWriteHandler.cs" />
     <Compile Include="Memory\Position.cs" />
     <Compile Include="Memory\Weapons\BlitzGun.cs" />

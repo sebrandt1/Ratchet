@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dsafdf", "dsafdf\dsafdf.csproj", "{D5FDA269-03F8-431B-A5C1-CDCFEBFF4B62}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RatchetMemoryApi", "RatchetMemoryApi\RatchetMemoryApi.csproj", "{6E99E856-1B1E-477D-AF93-B6035F9E75AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ratchet.UI", "Ratchet.UI\Ratchet.UI.csproj", "{25B86C96-EE40-484F-970B-78100030933B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ratchet.UI", "Ratchet.UI\Ratchet.UI.csproj", "{25B86C96-EE40-484F-970B-78100030933B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D5FDA269-03F8-431B-A5C1-CDCFEBFF4B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5FDA269-03F8-431B-A5C1-CDCFEBFF4B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5FDA269-03F8-431B-A5C1-CDCFEBFF4B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5FDA269-03F8-431B-A5C1-CDCFEBFF4B62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E99E856-1B1E-477D-AF93-B6035F9E75AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E99E856-1B1E-477D-AF93-B6035F9E75AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E99E856-1B1E-477D-AF93-B6035F9E75AD}.Release|Any CPU.ActiveCfg = Release|Any CPU

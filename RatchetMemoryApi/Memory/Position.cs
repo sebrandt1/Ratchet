@@ -34,12 +34,12 @@ namespace RatchetMemoryApi.Memory
                     break;
 
                 case Positions.Y:
-                    var currentY = MemoryReadWriteHandler.Instance.ReadFloat(XAddress);
+                    var currentY = MemoryReadWriteHandler.Instance.ReadFloat(YAddress);
                     MemoryReadWriteHandler.Instance.WriteFloat(YAddress, currentY + increment);
                     break;
 
                 case Positions.Z:
-                    var currentZ = MemoryReadWriteHandler.Instance.ReadFloat(XAddress);
+                    var currentZ = MemoryReadWriteHandler.Instance.ReadFloat(ZAddress);
                     MemoryReadWriteHandler.Instance.WriteFloat(ZAddress, currentZ + increment);
                     break;
             }

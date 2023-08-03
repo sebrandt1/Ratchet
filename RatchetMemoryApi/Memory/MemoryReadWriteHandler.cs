@@ -28,20 +28,29 @@ namespace RatchetMemoryApi.Memory
         private const int PROCESS_ALL_ACCESS = 0x1F0FFF;
         private IntPtr processHandle = IntPtr.Zero;
 
+        private static object lockObject = new object();
+
         public static MemoryReadWriteHandler Instance
         {
             get
             {
-                if (instance == null || instance.process == null || instance.process.HasExited)
+                lock(lockObject)
                 {
-                    instance = new MemoryReadWriteHandler();
-                    instance.process = Process.GetProcessesByName(PROCESS_NAME).FirstOrDefault();
-                    instance.processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, instance.process.Id);
-
-                    if(instance.process == null)
+                    if (instance == null || instance.process == null || instance.process.HasExited)
                     {
-                        throw new InvalidOperationException($"Process with name {PROCESS_NAME} was not found.");
-                    }    
+                        instance = new MemoryReadWriteHandler();
+                        instance.process = Process.GetProcessesByName(PROCESS_NAME).FirstOrDefault();
+
+                        if (instance.process != null)
+                        {
+                            instance.processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, instance.process.Id);
+                        }
+
+                        if (instance.process == null)
+                        {
+                            throw new InvalidOperationException($"Process with name {PROCESS_NAME} was not found.");
+                        }
+                    }
                 }
                 return instance;
             }

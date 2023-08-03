@@ -7,23 +7,52 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1000" Width="1380">
     <Grid>
-        <DataGrid x:Name="WeaponGrid" ItemsSource="{Binding WeaponBinding}" AlternatingRowBackground="#FFCECECE" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding SlotName}" Header="Slot Name" IsReadOnly="True" Width="175"/>
-                <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled"/>
-                <DataGridTextColumn Binding="{Binding Ammo}" Header="Ammo" Width="100"/>
-                <DataGridComboBoxColumn x:Name="WeaponIDs" SelectedValueBinding="{Binding GunID}" Header="Gun ID"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Label Content="X" HorizontalAlignment="Left" Margin="130,696,0,0" VerticalAlignment="Top" FontSize="16"/>
-        <Label Content="Y" HorizontalAlignment="Left" Margin="250,696,0,0" VerticalAlignment="Top" FontSize="16"/>
-        <Label Content="Z" HorizontalAlignment="Left" Margin="370,696,0,0" VerticalAlignment="Top" FontSize="16"/>
-        <TextBox x:Name="XPosTextBox" HorizontalAlignment="Left" Margin="82,732,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="YPosTextBox" HorizontalAlignment="Left" Margin="207,732,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="ZPosTextBox" HorizontalAlignment="Left" Margin="332,732,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Click="SetPositionButton_Click" Content="Set Position" HorizontalAlignment="Left" Margin="457,731,0,0" VerticalAlignment="Top"/>
-        <ComboBox SelectionChanged="PositionTypeOptions_SelectionChanged" x:Name="PositionTypeOptions" HorizontalAlignment="Left" Margin="82,763,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBox TextChanged="IncrementPositionTextBox_TextChanged" x:Name="IncrementPositionTextBox" HorizontalAlignment="Left" Margin="207,765,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Click="IncrementPositionButton_Click" Content="Increment Position" HorizontalAlignment="Left" Margin="332,763,0,0" VerticalAlignment="Top"/>
+        <TabControl>
+            <TabItem Header="Weapons" IsSelected="True">
+                <Grid>
+                    <DataGrid x:Name="WeaponGrid" ItemsSource="{Binding WeaponBinding}" AlternatingRowBackground="#FFCECECE" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding SlotName}" Header="Slot Name" IsReadOnly="True" Width="175"/>
+                            <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled"/>
+                            <DataGridTextColumn Binding="{Binding Ammo}" Header="Ammo" Width="100"/>
+                            <DataGridComboBoxColumn x:Name="WeaponIDs" SelectedValueBinding="{Binding GunID}" Header="Gun ID"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Click="UnlockAllWepsButton_Click" Content="Max All" HorizontalAlignment="Left" Margin="48,824,0,0" VerticalAlignment="Top" Height="47" Width="110" RenderTransformOrigin="0.546,0.575"/>
+                    <Button Click="MaxAmmoButton_Click" Content="Max Ammo" HorizontalAlignment="Left" Margin="202,824,0,0" VerticalAlignment="Top" Height="47" Width="110" RenderTransformOrigin="0.546,0.575"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Gadgets / Items">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="ItemsGrid" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="150"/>
+                            <DataGridCheckBoxColumn Binding="{Binding IsEnabled}" Header="Enabled"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Click="EnableAllItemsButton_Click" Content="Enable All" HorizontalAlignment="Left" Margin="26,554,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+                    <Button Click="DisableAllItemsButton_Click" Content="Disable All" HorizontalAlignment="Left" Margin="162,554,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ratchet">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28*"/>
+                        <ColumnDefinition Width="129*"/>
+                        <ColumnDefinition Width="1217*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Click="UnlockAllWepsButton_Click" Content="Unlock &amp; Max All" HorizontalAlignment="Center" Margin="0,740,0,0" VerticalAlignment="Top" Height="40" Grid.Column="1" Width="90"/>
+                    <Button Click="MaxAmmoButton_Click" Content="Max Ammo" HorizontalAlignment="Left" Margin="47,740,0,0" VerticalAlignment="Top" Height="40" Grid.Column="2" Width="65"/>
+                    <DataGrid SelectionChanged="ObjectGrid_SelectionChanged" x:Name="ObjectGrid" Grid.ColumnSpan="3" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Address}" IsReadOnly="True" Width="150" Header="Address"/>
+                            <DataGridCheckBoxColumn Binding="{Binding TeleportToMe}" Header="Teleport"/>
+                            <DataGridTextColumn Binding="{Binding ModelId}" Header="Model ID"/>
+                            <DataGridTextColumn Binding="{Binding Opacity}" Header="Opacity"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
